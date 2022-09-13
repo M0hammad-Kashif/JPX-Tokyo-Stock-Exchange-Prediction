@@ -11,14 +11,14 @@ logging.disable(logging.CRITICAL)
 class CustomArchitecture(tf.keras.layers.Layer):
     def __init__(self,
                  input_size: int,
-                 theta_size: int,
+                 intermediate_layer_size: int,
                  horizon: int,
                  n_neurons: int,
                  n_layers: int,
                  **kwargs):
         super().__init__(**kwargs)
         self.input_size = input_size
-        self.theta_size = theta_size
+        self.intermediate_layer_size = intermediate_layer_size
         self.horizon = horizon
         self.n_neurons = n_neurons
         self.n_layers = n_layers
@@ -28,7 +28,7 @@ class CustomArchitecture(tf.keras.layers.Layer):
         self.LSTM3 = tf.keras.layers.LSTM(128, return_sequences=True, activation='relu')
         self.LSTM4 = tf.keras.layers.LSTM(128, return_sequences=False, activation='relu')
 
-        self.intermediate_layer = tf.keras.layers.Dense(theta_size, activation="linear", name="theta")
+        self.intermediate_layer = tf.keras.layers.Dense(intermediate_layer_size, activation="linear", name="intermediate_layer")
 
     def call(self, inputs):
         x = inputs
