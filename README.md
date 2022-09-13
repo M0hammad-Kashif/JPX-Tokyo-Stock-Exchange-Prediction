@@ -25,3 +25,14 @@ There are plenty of existing quantitative trading efforts used to analyze financ
 
 ![](assets/allForOneSector.png)
 
+
+
+## Performance
+
+| Epochs| Train Loss | Validation Loss | 
+| 15    | 0.0080     | 0.0014          | 
+| 30    | 0.0022     | 0.0022          |
+| 45    | 0.0017     | 9.6315e-04      |
+| 60    | 0.0016     | 8.7064e-04      |
+
+
