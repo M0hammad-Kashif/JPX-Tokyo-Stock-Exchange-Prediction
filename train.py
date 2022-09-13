@@ -19,7 +19,7 @@ residual_inp = tf.eye(1, 14)
 tf.random.set_seed(42)
 
 custom_arch = CustomArchitecture(input_size=INPUT_SIZE,
-                                 theta_size=THETA_SIZE,
+                                 intermediate_layer_size=INTERMEDIATE_LAYER_SIZE,
                                  horizon=HORIZON,
                                  n_neurons=N_NEURONS,
                                  n_layers=N_LAYERS,
@@ -32,9 +32,9 @@ residuals, forecast = custom_arch(stack_input)
 residuals = layers.subtract([stack_input, residual_inp], name=f"subtract_00")
 
 for i, _ in enumerate(range(N_STACKS - 1)):
-    residual_inp, block_forecast = CustomArchtecture(
+    residual_inp, block_forecast = CustomArchitecture(
         input_size=INPUT_SIZE,
-        theta_size=THETA_SIZE,
+        intermediate_layer_size=INTERMEDIATE_LAYER_SIZE,
         horizon=HORIZON,
         n_neurons=N_NEURONS,
         n_layers=N_LAYERS,
