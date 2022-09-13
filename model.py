@@ -28,7 +28,7 @@ class CustomArchitecture(tf.keras.layers.Layer):
         self.LSTM3 = tf.keras.layers.LSTM(128, return_sequences=True, activation='relu')
         self.LSTM4 = tf.keras.layers.LSTM(128, return_sequences=False, activation='relu')
 
-        self.theta_layer = tf.keras.layers.Dense(theta_size, activation="linear", name="theta")
+        self.intermediate_layer = tf.keras.layers.Dense(theta_size, activation="linear", name="theta")
 
     def call(self, inputs):
         x = inputs
@@ -40,7 +40,7 @@ class CustomArchitecture(tf.keras.layers.Layer):
         x = self.LSTM3(x)
         x = self.LSTM4(x)
 
-        theta = self.theta_layer(x)
+        combinedForecast = self.intermediate_layer(x)
 
-        backcast, forecast = theta[:, :self.input_size], theta[:, -self.horizon:]
-        return backcast, forecast
+        residual_inp, global_residual_op = combinedForecast[:, :self.input_size], combinedForecast[:, -self.horizon:]
+        return residual_inp, global_residual_op
