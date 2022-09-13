@@ -14,7 +14,7 @@ logging.disable(logging.CRITICAL)
 
 from tensorflow.keras import layers
 
-backcast = tf.eye(1, 14)
+residual_inp = tf.eye(1, 14)
 
 tf.random.set_seed(42)
 
@@ -25,14 +25,14 @@ custom_arch = CustomArchitecture(input_size=INPUT_SIZE,
                                  n_layers=N_LAYERS,
                                  name="InitialBlock")
 
-stack_input = layers.Input(shape=(INPUT_SIZE), name="stack_input")
+stack_input = layers.Input(shape=INPUT_SIZE, name="stack_input")
 
 residuals, forecast = custom_arch(stack_input)
 
-residuals = layers.subtract([stack_input, backcast], name=f"subtract_00")
+residuals = layers.subtract([stack_input, residual_inp], name=f"subtract_00")
 
 for i, _ in enumerate(range(N_STACKS - 1)):
-    backcast, block_forecast = CustomArchtecture(
+    residual_inp, block_forecast = CustomArchtecture(
         input_size=INPUT_SIZE,
         theta_size=THETA_SIZE,
         horizon=HORIZON,
@@ -41,18 +41,18 @@ for i, _ in enumerate(range(N_STACKS - 1)):
         name=f"CustomArchitecture_{i}"
     )(residuals)
 
-    residuals = layers.subtract([residuals, backcast], name=f"subtract_{i}")
+    residuals = layers.subtract([residuals, residual_inp], name=f"subtract_{i}")
     forecast = layers.add([forecast, block_forecast], name=f"add_{i}")
 
-model_1_lstm = tf.keras.Model(inputs=stack_input,
+model = tf.keras.Model(inputs=stack_input,
                               outputs=forecast,
                               name="CustomArchitecture")
 
-model_1_lstm.compile(loss="mae",
+model.compile(loss="mae",
                      optimizer=tf.keras.optimizers.Adam(0.001),
                      metrics=["mae", "mse"])
 
-model_1_lstm.fit(train_dataset,
+model.fit(train_dataset,
                  epochs=N_EPOCHS,
                  validation_data=test_dataset,
                  verbose=1,
