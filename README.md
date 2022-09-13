@@ -26,6 +26,11 @@ There are plenty of existing quantitative trading efforts used to analyze financ
 ![](assets/allForOneSector.png)
 
 
+## Model Architecture 
+
+### Block Diagram of a Single Unit of Stacked Model
+
+![](assets/JPXmodel.png)
 
 ## Performance
 
